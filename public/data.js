@@ -1,0 +1,15 @@
+"use strict";
+let events;
+
+const eventsAllDay = [
+  { name: "Event 1", location: "Location 1" },
+  { name: "Event 1", location: "Location 1" },
+  { name: "Event 1", location: "Location 1" },
+  { name: "Event 1", location: "Location 1" },
+];
+
+// events.sort(
+//   (a, b) => (a.startTime > b.startTime ? 1 : -1)
+// );
+
+export { events, eventsAllDay };
