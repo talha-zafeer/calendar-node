@@ -1,11 +1,20 @@
 const Event = require("../models/Event");
+const DayEvent = require("../models/DayEvent");
 
-const displayEvents = (req, res) => {
-  Event.find({ createdBy: req.user._id })
-    .then((result) => {
-      res.json(result);
-    })
-    .catch((error) => {});
+const displayEvents = async (req, res) => {
+  try {
+    const events = await Event.find({ createdBy: req.user._id });
+    const dayEvents = await DayEvent.find({ createdBy: req.user._id });
+    console.log("events", events, dayEvents);
+    return res.status(200).json({
+      data: {
+        events,
+        dayEvents,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const createGet = (req, res) => {
@@ -19,6 +28,14 @@ const createPost = (req, res) => {
     .then((result) => {
       res.redirect("/events");
     })
+    .catch((e) => {});
+};
+
+const post_createAllDayEvent = (req, res) => {
+  const event = new DayEvent({ ...req.body, createdBy: req.user._id });
+  event
+    .save()
+    .then((result) => res.redirect("/events"))
     .catch((e) => {});
 };
 
@@ -41,9 +58,44 @@ const updateEvent = (req, res) => {
     });
 };
 
+const updateAllDayEvent = (req, res) => {
+  const { id, title, location } = { ...req.body };
+  console.log(req.body);
+
+  DayEvent.findByIdAndUpdate(
+    id,
+    {
+      $set: { title, location },
+    },
+    { useFindAndModify: false }
+  )
+    .then((result) => {
+      res.json({ redirect: "/" });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+const get_createAllDayEvent = (req, res) => {
+  res.render("createAllDayEvent");
+};
+
 const eventDelete = (req, res) => {
   const id = req.params.id;
   Event.findByIdAndDelete(id)
+    .then((result) => {
+      res.json({ redirect: "/" });
+    })
+    .catch((error) => {
+      console.log("error");
+    });
+  res.json({ redirect: "/" });
+};
+
+const eventAllDayDelete = (req, res) => {
+  const id = req.params.id;
+  DayEvent.findByIdAndDelete(id)
     .then((result) => {
       res.json({ redirect: "/" });
     })
@@ -59,4 +111,8 @@ module.exports = {
   createPost,
   updateEvent,
   eventDelete,
+  get_createAllDayEvent,
+  post_createAllDayEvent,
+  eventAllDayDelete,
+  updateAllDayEvent,
 };

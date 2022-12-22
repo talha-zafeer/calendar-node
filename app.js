@@ -34,9 +34,9 @@ app.use(authRoutes);
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "./views/index.html"));
 });
+// app.get("/", (req, res) => res.render("index"));
 app.use("/events", eventRoutes);
 
-// app.get("/", (req, res) => res.render("index"));
 // app.get("/create", (req, res) => res.render("create"));
 
 app.get("/smoothies", requireAuth, (req, res) => res.render("smoothies"));

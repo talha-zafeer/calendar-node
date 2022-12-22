@@ -11,7 +11,25 @@ body {
   max-width: 80%;
   margin: 0 auto;
 }
+a {
+  text-decoration: none;
+}
+nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 50px;
+  padding-bottom: 0px;
+}
 
+ul {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  text-decoration: none;
+  list-style: none;
+  gap: 10px;
+}
 header {
   text-transform: uppercase;
   border-bottom: 1px solid;
@@ -24,6 +42,7 @@ h5 {
   margin: 0;
   padding: 0;
 }
+
 .all-day-task {
   padding: 5px 0px;
   background-color: rgb(230, 230, 230, 0.3);
@@ -33,7 +52,22 @@ h5 {
   justify-content: space-around;
   gap: 2px;
 }
+.logout {
+  border: 2px solid rgb(237, 30, 121);
+  background-color: rgb(237, 30, 121, 0.03);
+  color: black;
+  border-radius: 3px;
+  padding: 10px;
+}
+.logout:hover {
+  color: black;
+  background-color: rgb(236, 147, 185, 0.5);
+  transition: 0.5s ease-in-out;
+}
 
+.logo > a {
+  color: rgb(237, 30, 121);
+}
 .am {
   display: flex;
   background-color: rgb(237, 30, 121, 0.03);

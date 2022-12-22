@@ -1,12 +1,14 @@
 "use strict";
-// import { events, eventsAllDay } from "./data.js";
 
 let renderedEvents = [];
 let hourSelector = [];
 let halfHourSelector = [];
 let allDayEventsSelector;
+let data;
 let events;
+let eventsAllDay;
 const eventModal = document.querySelector("#editEvent");
+const allDayEventModal = document.querySelector("#editAllDayEvent");
 //Assign id to every time set (e.g 1:00, 1:30, 2:00, 2:30)
 
 function init() {
@@ -19,9 +21,6 @@ function init() {
       [i].setAttribute("id", `half-${i}`);
     halfHourSelector.push(document.querySelector(`#half-${i}`));
   }
-  // for (let i = 0; i < eventsAllDay.length; i++) {
-  //   setAllDayEvent(eventsAllDay[i].title, eventsAllDay[i].location);
-  // }
 
   async function getEvents() {
     const endPoint = "/events";
@@ -30,12 +29,13 @@ function init() {
         method: "GET",
         headers: { "Content-Type": "application/json" },
       });
-      events = await result.json();
+      data = await result.json();
+      events = data.data.events;
+      eventsAllDay = data.data.dayEvents;
       events.sort(
         (a, b) => (a.endAt - a.startAt < b.endAt - b.startAt ? 1 : -1)
         // (a, b) => (a.startAt > b.startAt ? 1 : -1)
       );
-      console.log(events);
 
       for (let i = 0; i < events.length; i++) {
         setEvent(
@@ -44,6 +44,13 @@ function init() {
           events[i].title,
           events[i].location,
           events[i]._id
+        );
+      }
+      for (let i = 0; i < eventsAllDay.length; i++) {
+        setAllDayEvent(
+          eventsAllDay[i].title,
+          eventsAllDay[i].location,
+          eventsAllDay[i]._id
         );
       }
     } catch (err) {
@@ -173,9 +180,10 @@ const getFloatTime = (time1, time2) => {
 
 //Generates All Day events
 
-const setAllDayEvent = (eventName, eventLocation) => {
+const setAllDayEvent = (eventName, eventLocation, id) => {
   let newEvent;
   const content = document.createElement("div");
+  content.id = id;
   const time = document.createElement("p");
   const title = document.createElement("h5");
   const location = document.createElement("span");
@@ -186,6 +194,50 @@ const setAllDayEvent = (eventName, eventLocation) => {
   content.append(time, title, location);
   newEvent = allDayEventsSelector.appendChild(content);
   newEvent.classList.add("event-all-day");
+
+  newEvent.addEventListener("click", () => {
+    let eventData = eventsAllDay.filter((event) => event._id === id);
+    eventData = eventData[0];
+
+    const editForm = document.querySelector("#editAllDayForm");
+    editForm.title.value = eventData.title;
+    editForm.location.value = eventData.location;
+
+    editForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const id = eventData._id;
+      const title = editForm.title.value;
+      const location = editForm.location.value;
+
+      try {
+        const result = await fetch("/events/updateAllDayEvent", {
+          method: "PUT",
+          body: JSON.stringify({ id, title, location }),
+          headers: { "Content-Type": "application/json" },
+        });
+        window.location.href = "/";
+      } catch (error) {
+        console.log(error);
+      }
+    });
+
+    const deleteEvent = document.querySelector("#delete");
+    deleteEvent.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const id = eventData._id;
+
+      const endpoint = `/events/deleteAllDayEvent/${id}`;
+
+      fetch(endpoint, { method: "DELETE" })
+        .then((response) => response.json())
+        .then((data) => (window.location.href = data.redirect))
+        .catch((error) => {
+          console.log(error);
+        });
+    });
+
+    allDayEventModal.style.display = "block";
+  });
 };
 
 //Generates content to display on an event
@@ -249,6 +301,9 @@ const elementsOverlap = (el1, el2) => {
 window.onclick = function (event) {
   if (event.target == eventModal) {
     eventModal.style.display = "none";
+  }
+  if (event.target == allDayEventModal) {
+    allDayEventModals.style.display = "none";
   }
 };
 
