@@ -5,7 +5,7 @@ const authRoutes = require("./routes/authRoutes");
 const eventRoutes = require("./routes/eventRoutes");
 const cookieParser = require("cookie-parser");
 const path = require("path");
-const { requireAuth, checkUser } = require("./middlewares/authMiddleware");
+const { checkUser } = require("./middlewares/authMiddleware");
 const app = express();
 dotenv.config();
 
@@ -24,7 +24,7 @@ mongoose
     useUnifiedTopology: true,
     useCreateIndex: true,
   })
-  .then((result) => app.listen(process.env.port))
+  .then(() => app.listen(process.env.port))
   .catch((err) => console.log(err));
 
 // routes

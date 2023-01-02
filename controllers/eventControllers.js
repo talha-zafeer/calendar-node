@@ -58,7 +58,6 @@ const updateEvent = (req, res) => {
 
 const updateAllDayEvent = (req, res) => {
   const { id, title, location } = { ...req.body };
-  console.log(req.body);
 
   DayEvent.findByIdAndUpdate(
     id,

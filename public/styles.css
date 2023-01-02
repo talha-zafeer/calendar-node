@@ -58,11 +58,26 @@ h5 {
   color: black;
   border-radius: 3px;
   padding: 10px;
+  transition: 1s ease-in-out;
 }
 .logout:hover {
   color: black;
   background-color: rgb(236, 147, 185, 0.5);
+}
+
+.btn-primary {
+  border: 2px solid rgb(237, 30, 121);
+  background-color: rgb(237, 30, 121, 0.03);
+  color: black;
+  border-radius: 3px;
+  padding: 8px 20px;
   transition: 0.5s ease-in-out;
+}
+
+.btn-primary:hover {
+  border: 2px solid rgb(237, 30, 121);
+  color: black;
+  background-color: rgb(236, 147, 185, 0.5);
 }
 
 .logo > a {
