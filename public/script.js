@@ -110,7 +110,7 @@ const setEvent = (sTime, eTime, title, location, id) => {
           body: JSON.stringify({ id, title, location, startAt, endAt }),
           headers: { "Content-Type": "application/json" },
         });
-        window.location.href = "/";
+        window.location.href = "/display-events";
       } catch (error) {
         console.log(error);
       }
@@ -120,9 +120,6 @@ const setEvent = (sTime, eTime, title, location, id) => {
     deleteEvent.addEventListener("click", async (e) => {
       e.preventDefault();
       const id = eventData._id;
-
-      console.log("Here ===>");
-
       const endpoint = `/events/delete/${id}`;
 
       fetch(endpoint, { method: "DELETE" })
@@ -215,14 +212,15 @@ const setAllDayEvent = (eventName, eventLocation, id) => {
           body: JSON.stringify({ id, title, location }),
           headers: { "Content-Type": "application/json" },
         });
-        window.location.href = "/";
+        window.location.href = "/display-events";
       } catch (error) {
         console.log(error);
       }
     });
 
-    const deleteEvent = document.querySelector("#delete");
+    const deleteEvent = document.querySelector("#deleteAllDay");
     deleteEvent.addEventListener("click", async (e) => {
+      console.log("Heree ===>");
       e.preventDefault();
       const id = eventData._id;
 
@@ -303,7 +301,7 @@ window.onclick = function (event) {
     eventModal.style.display = "none";
   }
   if (event.target == allDayEventModal) {
-    allDayEventModals.style.display = "none";
+    allDayEventModal.style.display = "none";
   }
 };
 

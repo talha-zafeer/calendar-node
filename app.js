@@ -1,3 +1,4 @@
+const dotenv = require("dotenv");
 const express = require("express");
 const mongoose = require("mongoose");
 const authRoutes = require("./routes/authRoutes");
@@ -6,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 const { requireAuth, checkUser } = require("./middlewares/authMiddleware");
 const app = express();
+dotenv.config();
 
 // middleware
 app.use(express.static("public"));
@@ -15,28 +17,24 @@ app.use(cookieParser());
 app.set("view engine", "ejs");
 
 // database connection
-const dbURI =
-  "mongodb+srv://talha:12345@nodepractice.ypalsyr.mongodb.net/node-practice?retryWrites=true&w=majority";
+const dbURI = process.env.dataBaseUrl;
 mongoose
   .connect(dbURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
   })
-  .then((result) => app.listen(3000))
+  .then((result) => app.listen(process.env.port))
   .catch((err) => console.log(err));
 
 // routes
 app.use("*", checkUser);
 
 app.use(authRoutes);
-
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "./views/index.html"));
-});
-// app.get("/", (req, res) => res.render("index"));
 app.use("/events", eventRoutes);
 
-// app.get("/create", (req, res) => res.render("create"));
+app.get("/", (req, res) => res.render("login"));
 
-app.get("/smoothies", requireAuth, (req, res) => res.render("smoothies"));
+app.get("/display-events", (req, res) => {
+  res.sendFile(path.join(__dirname, "./views/index.html"));
+});

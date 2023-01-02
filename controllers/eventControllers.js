@@ -5,7 +5,6 @@ const displayEvents = async (req, res) => {
   try {
     const events = await Event.find({ createdBy: req.user._id });
     const dayEvents = await DayEvent.find({ createdBy: req.user._id });
-    console.log("events", events, dayEvents);
     return res.status(200).json({
       data: {
         events,
@@ -41,7 +40,6 @@ const post_createAllDayEvent = (req, res) => {
 
 const updateEvent = (req, res) => {
   const { id, title, location, startAt, endAt } = { ...req.body };
-  console.log(req.body);
 
   Event.findByIdAndUpdate(
     id,
@@ -90,7 +88,7 @@ const eventDelete = (req, res) => {
     .catch((error) => {
       console.log("error");
     });
-  res.json({ redirect: "/" });
+  res.json({ redirect: "/display-events" });
 };
 
 const eventAllDayDelete = (req, res) => {
@@ -102,7 +100,7 @@ const eventAllDayDelete = (req, res) => {
     .catch((error) => {
       console.log("error");
     });
-  res.json({ redirect: "/" });
+  res.json({ redirect: "/display-events" });
 };
 
 module.exports = {

@@ -163,7 +163,7 @@
               body: JSON.stringify({ title, location, startAt, endAt }),
               headers: { "Content-Type": "application/json" },
             });
-            window.location.href = "/";
+            window.location.href = "/display-events";
             console.log("req fired");
           } catch (e) {
             console.log(e);

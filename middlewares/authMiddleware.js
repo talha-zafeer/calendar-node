@@ -1,10 +1,12 @@
+const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+dotenv.config();
 
 const requireAuth = (req, res, next) => {
   const token = req.cookies.jwt;
   if (token) {
-    jwt.verify(token, "theSecret_Signature", (err, decodedToken) => {
+    jwt.verify(token, process.env.secretKey, (err, decodedToken) => {
       if (err) {
         console.log(err.message);
         res.redirect("/login");
@@ -23,7 +25,7 @@ const checkUser = (req, res, next) => {
   const token = req.cookies.jwt;
 
   if (token) {
-    jwt.verify(token, "theSecret_Signature", async (err, decodedToken) => {
+    jwt.verify(token, process.env.secretKey, async (err, decodedToken) => {
       if (err) {
         console.log(err.message);
         res.locals.user = null;
